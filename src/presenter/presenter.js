@@ -1,8 +1,8 @@
 import ViewTripList from '../view/trip-event-list.js';
 import ViewWayPoint from '../view/event-item.js';
 import ViewEditForm from '../view/edit-form.js';
-import { render } from '../render.js';
 import Empty from '../view/empty.js';
+import { render, replace } from '../framework/render.js';
 
 export default class Presenter {
 
@@ -40,27 +40,43 @@ export default class Presenter {
     const wayPoint = new ViewWayPoint(waypoint, this.#endPoints, this.#dlc);
     const editForm = new ViewEditForm(waypoint, this.#endPoints, this.#dlc);
 
-    const replaceComponents = (newComponent, oldComponent) => {
-      this.#component.element.replaceChild(newComponent.element, oldComponent.element);
+    const chagingComponents = (newComponent, oldComponent) => {
+      replace(newComponent, oldComponent);
     };
 
-    const closeButtonFirst = (evt) => {
+    const closeEventFormButton = (evt) => {
+      if (evt.key === "Delete" || evt.key === "Delete") {
+        evt.preventDefault();
+        chagingComponents(wayPoint, editForm);
+        document.removeEventListener('keydown', closeEventFormButton);
+      }
+
       if (evt.key == 'Escape' || evt.key == 'Esc'){
         evt.preventDefault();
-        replaceComponents(wayPoint, editForm);
-        document.removeEventListener('keydown', closeButtonFirst);
+        chagingComponents(wayPoint, editForm);
+        document.removeEventListener('keydown', closeEventFormButton);
       }
 
       if (evt.key === "Backspace" || evt.key === "Delete") {
         evt.preventDefault();
-        replaceComponents(wayPoint, editForm);
-        document.removeEventListener('keydown', closeButtonSecond);
+        chagingComponents(wayPoint, editForm);
+        document.removeEventListener('keydown', closeEventFormButton);
       }
     };
 
-    wayPoint.element.querySelector('.event__rollup-btn').addEventListener('click', () => {
-      replaceComponents(editForm, wayPoint);
-      document.addEventListener('keydown', closeButtonFirst);
+    wayPoint.setEditClickHandler(() => {
+      chagingComponents(editForm, wayPoint);
+      document.addEventListener('keydown', closeEventFormButton);
+    });
+
+    editForm.setPointClickHandler(() => {
+      chagingComponents(pointComponent, editingFormComponent);
+      document.RemoveEventListener('keydown', closeEventFormButton);
+    });
+
+    editForm.setSubmitHandler(() => {
+      chagingComponents(pointComponent, editingFormComponent);
+      document.removeEventListener('keydown', closeEventFormButton);
     });
     
     render(wayPoint, this.#component.element);
