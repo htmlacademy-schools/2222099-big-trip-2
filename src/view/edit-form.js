@@ -1,5 +1,5 @@
 import { dateTime } from '../utils/event-date.js';
-import { createElement } from '../render.js';
+import AbstractView from '../framework/view/abstract-view.js';
 
 const renderEndPointPicture = (pictures) => {
   let result = '';
@@ -139,26 +139,41 @@ const createTemplateEditForm = (point, endPoint, offers) => {
 };
 
 
-export default class ViewEditForm {
+export default class ViewEditForm extends AbstractView {
+  
+  #firstPoint = null;
+  #endPoint = null;
+  #dlc = null;
 
-  constructor(point, endPoint, offer) {
-    this.point = point;
-    this.endPoint = endPoint;
-    this.offer = offer;
+
+  constructor(firstPoint, endPoint, dlc) {
+    super();
+    this.#firstPoint = firstPoint;
+    this.#endPoint = endPoint;
+    this.#dlc = dlc;
   }
 
-  getTemplate() {
-    return createTemplateEditForm(this.point, this.endPoint, this.offer);
+  get template() {
+    return createTemplateEditForm(this.#firstPoint, this.#endPoint, this.#dlc);
   }
 
-  getElement() {
-    if (!this.element) {
-      this.element = createElement(this.getTemplate());
-    }
-    return this.element;
-  }
+  setPointClickHandler = (callback) => {
+    this._callback.click = callback;
+    this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#pointClickHandler);
+  };
 
-  removeElement() {
-    this.element = null;
-  }
+  setSubmitHandler = (callback) => {
+    this._callback.click = callback;
+    this.element.querySelector('form').addEventListener('submit', this.#submitHandler);
+  };
+
+  #pointClickHandler = (evt) => {
+    evt.preventDefault();
+    this._callback.click();
+  };
+
+  #submitHandler = (evt) =>{
+    evt.preventDefault();
+    this._callback.click();
+  };
 }

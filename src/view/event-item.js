@@ -1,6 +1,6 @@
+import AbstractView from '../framework/view/abstract-view.js';
 import { defaultPointDate, continuance, date, time } from '../utils/event-date.js';
 import { FavoriteOption } from '../utils/consts.js';
-import { createElement } from '../render.js';
 
 const offersRenderTemplate = (allOffer, checkOffers) => {
   let result = '';
@@ -55,25 +55,31 @@ const createTemplateWayPoint = (firstPoint, endPoint, offers) => {
   );
 };
 
-export default class ViewWayPoint {
+
+export default class ViewWayPoint extends AbstractView {
+
+  #point = null;
+  #destination = null;
+  #offers = null
+
   constructor(point, destination, offers){
-    this.point = point;
-    this.destination = destination;
-    this.offers = offers;
+    super();
+    this.#point = point;
+    this.#destination = destination;
+    this.#offers = offers;
   }
 
-  getTemplate(){
-    return createTemplateWayPoint(this.point, this.destination, this.offers);
+  get template() {
+    return createTemplateWayPoint(this.#point, this.#destination, this.#offers);
   }
 
-  getElement(){
-    if(!this.element){
-      this.element = createElement(this.getTemplate());
-    }
-    return this.element;
-  }
+  setEditClickHandler = (callback) => {
+    this._callback.click = callback;
+    this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#editClickHandler);
+  };
 
-  removeElement(){
-    this.element = null;
-  }
+  #editClickHandler = (evt) => {
+    evt.preventDefault();
+    this._callback.click();
+  };
 }

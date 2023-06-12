@@ -18,6 +18,7 @@
   },
   "devDependencies": {
     "copy-webpack-plugin": "^11.0.0",
+    "css-loader": "^6.8.1",
     "eslint": "7.32.0",
     "eslint-config-htmlacademy": "5.0.0"
   },
@@ -29,6 +30,7 @@
     "@babel/preset-env": "^7.20.2",
     "babel-loader": "^8.2.3",
     "dayjs": "^1.11.8",
+    "styles-loader": "^4.0.1",
     "webpack": "^5.62.1",
     "webpack-cli": "^4.9.1",
     "webpack-dev-server": "^4.4.0"
