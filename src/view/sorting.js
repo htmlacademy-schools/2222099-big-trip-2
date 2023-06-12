@@ -31,3 +31,4 @@ export default class ViewSort extends AbstractView {
     return createSortingTemplate();
   }
 }
+

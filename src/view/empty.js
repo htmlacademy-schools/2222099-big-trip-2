@@ -9,4 +9,3 @@ export default class Empty extends AbstractView {
   get template() {
     return createEmptyTemplate();
   }
-}
