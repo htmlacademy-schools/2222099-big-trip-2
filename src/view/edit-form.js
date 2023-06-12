@@ -140,25 +140,31 @@ const createTemplateEditForm = (point, endPoint, offers) => {
 
 
 export default class ViewEditForm {
+  
+  #element = null;
+  #firstPoint = null;
+  #endPoint = null;
+  #dlc = null;
 
-  constructor(point, endPoint, offer) {
-    this.point = point;
-    this.endPoint = endPoint;
-    this.offer = offer;
+
+  constructor(firstPoint, endPoint, dlc) {
+    this.#firstPoint = firstPoint;
+    this.#endPoint = endPoint;
+    this.#dlc = dlc;
   }
 
-  getTemplate() {
-    return createTemplateEditForm(this.point, this.endPoint, this.offer);
+  get template() {
+    return createTemplateEditForm(this.#firstPoint, this.#endPoint, this.#dlc);
   }
 
-  getElement() {
-    if (!this.element) {
-      this.element = createElement(this.getTemplate());
+  get element() {
+    if (!this.#element) {
+      this.#element = createElement(this.template);
     }
-    return this.element;
+    return this.#element;
   }
 
   removeElement() {
-    this.element = null;
+    this.#element = null;
   }
 }
