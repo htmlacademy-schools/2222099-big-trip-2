@@ -1,7 +1,7 @@
 import dayjs from 'dayjs';
 import { getRandomInteger, getRandomElement } from '../utils/random.js';
 
-const COUNT = 50;
+const COUNT = 120;
 const TYPES = ['taxi', 'bus', 'train', 'ship', 'drive', 'flight', 'check-in', 'sightseeing', 'restaurant'];
 const ENDPOINTS = ['Amsterdam', 'Chamonix', 'Geneva', 'Vena', 'Berlin', 'Praga', 'Belgrad', 'Cair', 'Riga',];
 
@@ -20,7 +20,7 @@ const CountEelements = {
 
 const NumberPicture = {
   MIN: 1,
-  MAX: 60
+  MAX: 150
 };
 
 const ServicePrice = {
