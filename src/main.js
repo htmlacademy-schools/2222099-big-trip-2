@@ -4,6 +4,7 @@ import WayPointsModel from './model/waypoint-model.js';
 import ViewMenu from './view/menu.js';
 import { render } from './framework/render.js';
 import { getAllPoints, getEndPoints, typeOffersGet } from './mock/waypoint.js';
+import { filterGenerate } from './utils/consts.js';
 
 const menuContainer = document.querySelector('.trip-controls__navigation');
 const filterContainer = document.querySelector('.trip-controls__filters');
@@ -14,9 +15,10 @@ const points = getAllPoints();
 const destinations = getEndPoints();
 const offersByType = typeOffersGet();
 const wayPointsModel = new WayPointsModel();
+const filters = filterGenerate(points);
 
 render(new ViewMenu(), menuContainer);
-render(new ViewFilters(), filterContainer);
+render(new ViewFilters(filters), filterContainer);
 
 wayPointsModel.init(points, destinations, offersByType);
 tripPresenter.init(wayPointsModel);
