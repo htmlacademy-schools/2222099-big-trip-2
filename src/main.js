@@ -1,15 +1,23 @@
+import ViewFilters from './view/filters.js';
 import Presenter from './presenter/presenter.js';
-import { render } from './render.js';
-import ViewSort from './view/sorting.js';
-import ViewFilter from './view/filters.js';
+import WayPointsModel from './model/waypoint-model.js';
 import ViewMenu from './view/menu.js';
+import ViewSort from './view/sorting.js';
+import { render } from './render.js';
+import { getAllPoints, getEndPoints, typeOffersGet } from './mock/waypoint.js';
 
-const menuContainer = document.querySelector('.trip-controls__navigation');
-const filtersContainer = document.querySelector('.trip-controls__filters');
-const presenterTripList = document.querySelector('.trip-events');
-const tripListPresenter = new Presenter({container : presenterTripList});
+const filterContainer = document.querySelector('.trip-controls__filters');
+const tripContainer = document.querySelector('.trip-events');
+const tripPresenter = new Presenter(tripContainer);
 
-render(new ViewMenu(), menuContainer);
-render(new ViewSort(), presenterTripList);
-render(new ViewFilter(), filtersContainer);
-tripListPresenter.init();
+const points = getAllPoints();
+const destinations = getEndPoints();
+const offersByType = typeOffersGet();
+const wayPointsModel = new WayPointsModel();
+
+render(new ViewMenu(), filterContainer);
+render(new ViewSort(), tripContainer);
+render(new ViewFilters(), filterContainer);
+
+wayPointsModel.init(points, destinations, offersByType);
+tripPresenter.init(wayPointsModel);
