@@ -2,6 +2,7 @@ import ViewTripList from '../view/trip-event-list.js';
 import ViewWayPoint from '../view/event-item.js';
 import ViewEditForm from '../view/edit-form.js';
 import { render } from '../render.js';
+import Empty from '../view/empty.js';
 
 export default class Presenter {
 
@@ -23,10 +24,15 @@ export default class Presenter {
     this.#endPoints = [...this.#wayPointsModel.endPoints];
     this.#dlc = [...this.#wayPointsModel.dlc];
 
-    render(this.#component, this.#container);
+    if (this.#boardPoints === 0) {
+      render(new Empty(), this.#container);
+    }
+    else {
+      render(this.#component, this.#container);
 
-    for (const point of this.#boardPoints){
-      this.#renderTripPoint(point);
+      for (const point of this.#boardPoints) {
+        this.#renderTripPoint(point);
+      }
     }
   }
 
@@ -38,20 +44,25 @@ export default class Presenter {
       this.#component.element.replaceChild(newComponent.element, oldComponent.element);
     };
 
-    const closeButton = (evt) => {
-      if(evt.key == 'Escape' || evt.key == 'Esc'){
+    const closeButtonFirst = (evt) => {
+      if (evt.key == 'Escape' || evt.key == 'Esc'){
         evt.preventDefault();
         replaceComponents(wayPoint, editForm);
-        document.removeEventListener('keydown', closeButton);
+        document.removeEventListener('keydown', closeButtonFirst);
+      }
+
+      if (evt.key === "Backspace" || evt.key === "Delete") {
+        evt.preventDefault();
+        replaceComponents(wayPoint, editForm);
+        document.removeEventListener('keydown', closeButtonSecond);
       }
     };
 
     wayPoint.element.querySelector('.event__rollup-btn').addEventListener('click', () => {
       replaceComponents(editForm, wayPoint);
-      document.addEventListener('keydown', closeButton);
+      document.addEventListener('keydown', closeButtonFirst);
     });
     
     render(wayPoint, this.#component.element);
   }
 }
-
