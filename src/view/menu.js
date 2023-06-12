@@ -21,4 +21,4 @@ const createTemplateMenu = () =>
     removeElement() {
         this.element = null;
     }
-}
+  }
