@@ -54,3 +54,4 @@ export default class Presenter {
     render(wayPoint, this.#component.element);
   }
 }
+
