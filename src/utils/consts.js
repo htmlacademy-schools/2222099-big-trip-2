@@ -20,6 +20,16 @@ const SortType = {
   PRICE: 'price',
   OFFER: 'offer',
 };
+
+const BLANK_POINT = {
+  basePrice: 0,
+  dateFrom: dayjs(),
+  dateTo: dayjs(),
+  destinationId: 0,
+  isFavorite: false,
+  offerIds: [],
+  type: POINT_TYPES[0],
+};
   
 const filter = {
     [filterType.EVERYTHING]: (points) => points,
@@ -59,4 +69,5 @@ const firstLetterUp = (value) =>{
   return firstLetter + remainingPart;
 };
 
-export { FavoriteOption, mode, SortType, filter, filterGenerate, itemUpdate, firstLetterUp };
+
+export { FavoriteOption, mode, SortType, filter, BLANK_POINT, filterGenerate, itemUpdate, firstLetterUp };
