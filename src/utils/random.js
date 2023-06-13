@@ -11,5 +11,4 @@ const getRandomElement = (elements) => {
     return elements[getRandomInteger(MIN, max)];
 };
 
-
 export { getRandomElement, getRandomInteger };
