@@ -1,100 +1,140 @@
-import ViewTripList from '../view/trip-event-list.js';
-import Empty from '../view/empty.js';
-import WayPointPresenter from './way-presenter.js';
-import ViewSort from '../view/sorting.js';
-import { SortType } from '../utils/consts.js';
-import { render } from '../framework/render.js';
-import { itemUpdate } from '../utils/consts.js';
-import { sortDay, sortTime, sortPrice } from '../utils/event-date.js';
+import EditingFormView from '../view/editing-form.js';
+import WayPointView from '../view/way-point.js';
+import { render, replace, remove } from '../framework/render.js';
+import { UserAction, UpdateType } from '../consts.js';
 
-export default class AdventurePresenter {
+const Mode = {
+  PREVIEW: 'preview',
+  EDITING: 'editing',
+};
 
-  #container = null;
-  #component = null;
+export default class PointPresenter {
+  #pointListContainer = null;
+  #pointComponent = null;
+  #editFormComponent = null;
   #pointsModel = null;
-  #boardPoints = null;
+  #destinationsModel = null;
+  #offersModel = null;
 
-  #pointsPresenters = new Map();
-  #currentSortType = null;
-  #sourcedBoardPoints = [];
+  #destinations = null;
+  #offers = null;
 
-  #sortComponent = new ViewSort();
+  #changeData = null;
+  #changeMode = null;
+  #point = null;
+  #mode = Mode.PREVIEW;
 
-  constructor(container) {
-    this.#container = container;
-    this.#component = new ViewTripList();
-  }
-
-  init(pointsModel) {
+  constructor({pointListContainer, pointsModel, changeData, changeMode, destinationsModel, offersModel}) {
+    this.#pointListContainer = pointListContainer;
     this.#pointsModel = pointsModel;
-    this.#boardPoints = [...this.#pointsModel.points];
-    this.#sourcedBoardPoints = [...this.#pointsModel.points];
-
-    if(this.#boardPoints.length === 0){
-      render(new Empty(), this.#container);
-    }
-    else{
-      this.#renderSort()
-      render(this.#component, this.#container);
-      this.#renderPointList(0, this.#boardPoints.length);
-    }
+    this.#changeData = changeData;
+    this.#changeMode = changeMode;
+    this.#destinationsModel = destinationsModel;
+    this.#offersModel = offersModel;
   }
 
-  #handleModeChange = () => {
-    this.#pointsPresenters.forEach((presenter) => presenter.resetView());
-  };
+  init(point) {
+    this.#point = point;
+    this.#destinations = [...this.#destinationsModel.destinations];
+    this.#offers = [...this.#offersModel.offers];
 
-  #handlePointChange = (updatedPoint) => {
-    this.#boardPoints = itemUpdate(this.#boardPoints, updatedPoint);
-    this.#pointsPresenters.get(updatedPoint.id).init(updatedPoint);
-    this.#sourcedBoardPoints = itemUpdate( this.#sourcedBoardPoints, updatedPoint);
-  };
+    const prevPointComponent = this.#pointComponent;
+    const prevEditingFormComponent =  this.#editFormComponent;
 
-  #handleSortTypeChange = (sortType) => {
-    if (this.#currentSortType === sortType) {
+    this.#pointComponent = new WayPointView(point, this.#destinations, this.#offers);
+    this.#editFormComponent = new EditingFormView({
+      point: point,
+      destination: this.#destinations,
+      offers: this.#offers,
+      isNewPoint: false,
+    });
+
+    this.#pointComponent.setEditClickHandler(this.#handleEditClick);
+    this.#pointComponent.setFavoriteClickHandler(this.#handleFavoriteClick);
+    this.#editFormComponent.setPointClickHandler(this.#handlePointClick);
+    this.#editFormComponent.setSubmitHandler(this.#handleFormSubmit);
+    this.#editFormComponent.setDeleteClickHandler(this.#handleDeleteClick);
+
+    if (!prevPointComponent || !prevEditingFormComponent) {
+      render(this.#pointComponent, this.#pointListContainer);
       return;
     }
 
-    this.#sortPoint(sortType);
-    this.#clearPointList();
-    this.#renderPointList();
-  };
-
-  #renderPoint = (point) =>{
-    const pointPresenter = new WayPointPresenter(this.#component.element, this.#pointsModel, this.#handlePointChange, this.#handleModeChange);
-    pointPresenter.init(point);
-    this.#pointsPresenters.set(point.id, pointPresenter);
-  };
-
-  #renderPointList = (from, to) =>{
-    this.#boardPoints.slice(from, to).forEach((point) => this.#renderPoint(point));
-  };
-
-  #renderSort = () =>{
-    this.#boardPoints.sort(sortDay);
-    render(this.#sortComponent, this.#container);
-    this.#sortComponent.setSortTypeChangeHandler(this.#handleSortTypeChange);
-  };
-
-  #clearPointList = () => {
-    this.#pointsPresenters.forEach((presenter) => presenter.destroy());
-    this.#pointsPresenters.clear();
-  };
-
-  #sortPoint = (sortType) => {
-    switch (sortType) {
-      case SortType.DAY:
-        this.#boardPoints.sort(sortDay);
+    switch (this.#mode){
+      case Mode.PREVIEW:
+        replace(this.#pointComponent, prevPointComponent);
         break;
-      case SortType.TIME:
-        this.#boardPoints.sort(sortTime);
-        break;
-      case SortType.PRICE:
-        this.#boardPoints.sort(sortPrice);
+      case Mode.EDITING:
+        replace(this.#editFormComponent, prevEditingFormComponent);
         break;
     }
 
-    this.#currentSortType = sortType;
+    remove(prevPointComponent);
+    remove(prevEditingFormComponent);
+  }
+
+  destroy = () => {
+    remove(this.#pointComponent);
+    remove(this.#editFormComponent);
   };
 
+  resetView = () => {
+    if (this.#mode !== Mode.PREVIEW) {
+      this.#editFormComponent.reset(this.#point);
+      this.#replaceEditingFormToPoint();
+    }
+  };
+
+  #replacePointToEditingForm = () => {
+    replace(this.#editFormComponent, this.#pointComponent);
+    document.addEventListener('keydown', this.#onEscKeyDown);
+    this.#changeMode();
+    this.#mode = Mode.EDITING;
+  };
+
+  #replaceEditingFormToPoint = () => {
+    replace(this.#pointComponent, this.#editFormComponent);
+    document.removeEventListener('keydown', this.#onEscKeyDown);
+    this.#mode = Mode.PREVIEW;
+  };
+
+  #onEscKeyDown = (evt) => {
+    if (evt.key === 'Escape' || evt.key === 'Esc') {
+      evt.preventDefault();
+      this.resetView();
+    }
+  };
+
+  #handleFavoriteClick = () => {
+    this.#changeData(
+      UserAction.UPDATE_POINT,
+      UpdateType.PATCH,
+      {...this.#point, isFavorite: !this.#point.isFavorite},
+    );
+  };
+
+  #handleEditClick = () => {
+    this.#replacePointToEditingForm();
+  };
+
+  #handlePointClick = () => {
+    this.resetView();
+  };
+
+  #handleFormSubmit = (point) => {
+    this.#changeData(
+      UserAction.UPDATE_POINT,
+      UpdateType.MINOR,
+      point,
+    );
+    this.#replaceEditingFormToPoint();
+  };
+
+  #handleDeleteClick = (point) => {
+    this.#changeData(
+      UserAction.DELETE_POINT,
+      UpdateType.MINOR,
+      point,
+    );
+  };
 }

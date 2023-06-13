@@ -1,8 +1,9 @@
 import { dateInFuturePoint, dateInPastPoint } from '../utils/event-date.js';
+import dayjs from 'dayjs';
 
 const FavoriteOption = (isFavorite) => (isFavorite) ? 'event__favorite-btn--active' : '';
 
-const filterType = {
+const FilterType = {
     EVERYTHING: 'everything',
     FUTURE: 'future',
     PAST: 'past'
@@ -21,14 +22,33 @@ const SortType = {
   OFFER: 'offer',
 };
 
-const BLANK_POINT = {
-  basePrice: 0,
-  dateFrom: dayjs(),
-  dateTo: dayjs(),
-  destinationId: 0,
-  isFavorite: false,
-  offerIds: [],
-  type: POINT_TYPES[0],
+const UserAction = {
+  UPDATE_POINT: 'UPDATE_POINT',
+  ADD_POINT: 'ADD_POINT',
+  DELETE_POINT: 'DELETE_POINT',
+};
+
+const sortPricePoint = (pointA, pointB) => pointB.basePrice - pointA.basePrice;
+
+const sortDayPoint = (pointA, pointB) => dayjs(pointA.dateFrom).diff(dayjs(pointB.dateFrom));
+
+const sortTimePoint = (pointA, pointB) => {
+  const timePointA = dayjs(pointA.dateTo).diff(dayjs(pointA.dateFrom));
+  const timePointB = dayjs(pointB.dateTo).diff(dayjs(pointB.dateFrom));
+  return timePointB - timePointA;
+};
+
+const sorting = {
+  [SortType.DAY]: (points) => points.sort(sortDayPoint),
+  [SortType.TIME]: (points) => points.sort(sortTimePoint),
+  [SortType.PRICE]: (points) => points.sort(sortPricePoint)
+};
+
+const UpdateType = {
+  PATCH: 'PATCH',
+  MINOR: 'MINOR',
+  MAJOR: 'MAJOR',
+  INIT: 'INIT',
 };
   
 const filter = {
@@ -69,5 +89,4 @@ const firstLetterUp = (value) =>{
   return firstLetter + remainingPart;
 };
 
-
-export { FavoriteOption, mode, SortType, filter, BLANK_POINT, filterGenerate, itemUpdate, firstLetterUp };
+export { UserAction, FavoriteOption, FilterType, mode, SortType, filter, filterGenerate, itemUpdate, firstLetterUp, UpdateType, sorting };
