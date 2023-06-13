@@ -11,7 +11,15 @@ const filterType = {
 const mode = {
   PREVIEW: 'preview',
   EDITING: 'editing'
-}
+};
+
+const SortType = {
+  DAY: 'day',
+  EVENT: 'event',
+  TIME: 'time',
+  PRICE: 'price',
+  OFFER: 'offer',
+};
   
 const filter = {
     [filterType.EVERYTHING]: (points) => points,
@@ -41,4 +49,4 @@ const itemUpdate = (items, update) => {
     ];
   };
 
-export { FavoriteOption, mode, filter, filterGenerate, itemUpdate };
+export { FavoriteOption, mode, SortType, filter, filterGenerate, itemUpdate };
