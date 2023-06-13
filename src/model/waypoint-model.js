@@ -1,29 +1,29 @@
 export default class WayPointsModel {
 
-  #firstPoint = null;
-  #endPoints = null;
-  #dlc = null;
+  #points = null;
+  #destinations = null;
+  #offers = null;
 
   constructor() {
-    this.#firstPoint = [];
+    this.#points = [];
   }
 
-  init(firstPoint, endPoints, dlc) {
-    this.#firstPoint = firstPoint;
-    this.#endPoints = endPoints;
-    this.#dlc = dlc;
+  init(points, destinations, offers) {
+    this.#points = points;
+    this.#destinations = destinations;
+    this.#offers = offers;
   }
 
-  get firstPoint() {
-    return this.#firstPoint;
+  get points() {
+    return this.#points;
   }
 
-  get endPoints() {
-    return this.#endPoints;
+  get destinations() {
+    return this.#destinations;
   }
 
-  get dlc() {
-    return this.#dlc;
+  get offers() {
+    return this.#offers;
   }
 }
 

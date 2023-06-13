@@ -1,5 +1,5 @@
 import ViewFilters from './view/filters.js';
-import Presenter from './presenter/presenter.js';
+import AdventurePresenter from './presenter/adventure-presenter.js';
 import WayPointsModel from './model/waypoint-model.js';
 import ViewMenu from './view/menu.js';
 import { render } from './framework/render.js';
@@ -9,7 +9,7 @@ import { filterGenerate } from './utils/consts.js';
 const menuContainer = document.querySelector('.trip-controls__navigation');
 const filterContainer = document.querySelector('.trip-controls__filters');
 const tripContainer = document.querySelector('.trip-events');
-const tripPresenter = new Presenter(tripContainer);
+const tripPresenter = new AdventurePresenter(tripContainer);
 
 const points = getAllPoints();
 const destinations = getEndPoints();
