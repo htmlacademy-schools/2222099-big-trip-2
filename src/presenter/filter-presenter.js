@@ -69,3 +69,4 @@ export default class FilterPresenter {
     this.init();
   };
 }
+
