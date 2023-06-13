@@ -32,4 +32,14 @@ const dateInPastPoint = (dateTo) => dateTo.isBefore(dayjs());
 const dateInFuturePoint = (dateFrom) => dateFrom.isAfter(dayjs());
 const dateNowPoint = (dateFrom, dateTo) => dateFrom.isBefore(dayjs()) && dateTo.isAfter(dayjs());
 
-export { defaultPointDate, continuance, date, time, dateTime, dateInPastPoint, dateInFuturePoint, dateNowPoint };
+const sortPrice = (pointA, pointB) => pointB.basePrice - pointA.basePrice;
+
+const sortDay = (pointA, pointB) => dayjs(pointA.dateFrom).diff(dayjs(pointB.dateFrom));
+
+const sortTime = (pointA, pointB) => {
+  const timePointA = dayjs(pointA.dateTo).diff(dayjs(pointA.dateFrom));
+  const timePointB = dayjs(pointB.dateTo).diff(dayjs(pointB.dateFrom));
+  return timePointB - timePointA;
+};
+
+export { defaultPointDate, continuance, date, time, dateTime, dateInPastPoint, dateInFuturePoint, dateNowPoint, sortPrice, sortDay, sortTime };

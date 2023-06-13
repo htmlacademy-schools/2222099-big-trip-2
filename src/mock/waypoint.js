@@ -83,6 +83,6 @@ const generatePoint = () => {
   };
 };
 
-const getAllPoints = () => Array.from({length: COUNT}).map(() => generatePoint());
+const getAllPoints = () => Array.from({length: COUNT}).map(() => generatePoint()).sort();
 
 export { getAllPoints, getEndPoints, typeOffersGet };
