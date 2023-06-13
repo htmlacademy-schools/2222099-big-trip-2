@@ -11,7 +11,15 @@ const filterType = {
 const mode = {
   PREVIEW: 'preview',
   EDITING: 'editing'
-}
+};
+
+const SortType = {
+  DAY: 'day',
+  EVENT: 'event',
+  TIME: 'time',
+  PRICE: 'price',
+  OFFER: 'offer',
+};
   
 const filter = {
     [filterType.EVERYTHING]: (points) => points,
@@ -39,6 +47,16 @@ const itemUpdate = (items, update) => {
       update,
       ...items.slice(index + 1),
     ];
-  };
+};
 
-export { FavoriteOption, mode, filter, filterGenerate, itemUpdate };
+const firstLetterUp = (value) =>{
+  if ( value === '' || value === null){
+    return value;
+  }
+
+  const firstLetter = value[0].toUpperCase();
+  const remainingPart = value.slice(1);
+  return firstLetter + remainingPart;
+};
+
+export { FavoriteOption, mode, SortType, filter, filterGenerate, itemUpdate, firstLetterUp };

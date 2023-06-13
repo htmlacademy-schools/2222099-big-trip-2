@@ -38,7 +38,7 @@ export default class WayPointPresenter {
 
     this.#pointComponent.setEditClickHandler(this.#handleEditClick);
     this.#pointComponent.setFavoriteClickHandler(this.#handleFavoriteClick);
-    this.#editFormComponent.setPointClickHandler(this.#handlePointClick);
+    this.#editFormComponent.setPointClickHandler(this.resetView);
     this.#editFormComponent.setSubmitHandler(this.#handleFormSubmit);
 
     if (prevPointComponent === null || prevEditingFormComponent === null) {
@@ -65,6 +65,7 @@ export default class WayPointPresenter {
 
   resetView = () => {
     if (this.#mode !== Mode.PREVIEW) {
+      this.editFormComponent.reset(this.#point);
       this.#replaceEditingFormToPoint();
     }
   };
@@ -85,7 +86,7 @@ export default class WayPointPresenter {
   #onEscKeyDown = (evt) => {
     if (evt.key === 'Escape' || evt.key === 'Esc') {
       evt.preventDefault();
-      this.#replaceEditingFormToPoint();
+      this.resetView();
     }
   };
 
