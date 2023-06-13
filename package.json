@@ -30,6 +30,7 @@
     "@babel/preset-env": "^7.20.2",
     "babel-loader": "^8.2.3",
     "dayjs": "^1.11.8",
+    "react-flatpickr": "^3.10.13",
     "styles-loader": "^4.0.1",
     "webpack": "^5.62.1",
     "webpack-cli": "^4.9.1",
