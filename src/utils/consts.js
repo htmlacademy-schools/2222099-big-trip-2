@@ -1,19 +1,3 @@
-import { dateInFuturePoint, dateInPastPoint } from '../utils/event-date.js';
-import dayjs from 'dayjs';
-
-const FavoriteOption = (isFavorite) => (isFavorite) ? 'event__favorite-btn--active' : '';
-
-const FilterType = {
-    EVERYTHING: 'everything',
-    FUTURE: 'future',
-    PAST: 'past'
-};
-
-const mode = {
-  PREVIEW: 'preview',
-  EDITING: 'editing'
-};
-
 const SortType = {
   DAY: 'day',
   EVENT: 'event',
@@ -22,26 +6,17 @@ const SortType = {
   OFFER: 'offer',
 };
 
+const Mode = {
+  PREVIEW: 'preview',
+  EDITING: 'editing',
+};
+
+const SORT_TYPES_DISABLED = [SortType.EVENT, SortType.OFFER];
+
 const UserAction = {
   UPDATE_POINT: 'UPDATE_POINT',
   ADD_POINT: 'ADD_POINT',
   DELETE_POINT: 'DELETE_POINT',
-};
-
-const sortPricePoint = (pointA, pointB) => pointB.basePrice - pointA.basePrice;
-
-const sortDayPoint = (pointA, pointB) => dayjs(pointA.dateFrom).diff(dayjs(pointB.dateFrom));
-
-const sortTimePoint = (pointA, pointB) => {
-  const timePointA = dayjs(pointA.dateTo).diff(dayjs(pointA.dateFrom));
-  const timePointB = dayjs(pointB.dateTo).diff(dayjs(pointB.dateFrom));
-  return timePointB - timePointA;
-};
-
-const sorting = {
-  [SortType.DAY]: (points) => points.sort(sortDayPoint),
-  [SortType.TIME]: (points) => points.sort(sortTimePoint),
-  [SortType.PRICE]: (points) => points.sort(sortPricePoint)
 };
 
 const UpdateType = {
@@ -50,43 +25,55 @@ const UpdateType = {
   MAJOR: 'MAJOR',
   INIT: 'INIT',
 };
-  
-const filter = {
-    [filterType.EVERYTHING]: (points) => points,
-    [filterType.FUTURE]: (points) => points.filter((point) => dateInFuturePoint(point.dateFrom)),
-    [filterType.PAST]: (points) => points.filter((point) => dateInPastPoint(point.dateTo)),
+
+const FilterType = {
+  EVERYTHING: 'everything',
+  FUTURE: 'future',
+  PAST: 'past'
 };
 
-const filterGenerate = (points) => Object.entries(filter).map(
-    ([filterName, filterPoints]) => ({
-      name: filterName,
-      count: filterPoints(points).length,
-    }),
-);
-
-
-const itemUpdate = (items, update) => {
-    const index = items.findIndex((item) => item.id === update.id);
-  
-    if (index === -1) {
-      return items;
-    }
-  
-    return [
-      ...items.slice(0, index),
-      update,
-      ...items.slice(index + 1),
-    ];
+const SortTypeDescription = {
+  [SortType.DAY]: 'Day',
+  [SortType.EVENT]: 'Event',
+  [SortType.TIME]: 'Time',
+  [SortType.PRICE]: 'Price',
+  [SortType.OFFER]: 'Offer',
 };
 
-const firstLetterUp = (value) =>{
-  if ( value === '' || value === null){
-    return value;
-  }
-
-  const firstLetter = value[0].toUpperCase();
-  const remainingPart = value.slice(1);
-  return firstLetter + remainingPart;
+const PointType = {
+  TAXI: 'taxi',
+  BUS: 'bus',
+  TRAIN: 'train',
+  SHIP: 'ship',
+  DRIVE: 'drive',
+  FLIGHT: 'flight',
+  CHECK_IN: 'check-in',
+  SIGHTSEEING: 'sightseeing',
+  RESTAURANT: 'restaurant'
 };
 
-export { UserAction, FavoriteOption, FilterType, mode, SortType, filter, filterGenerate, itemUpdate, firstLetterUp, UpdateType, sorting };
+const PointTypeDescription = {
+  [PointType.TAXI]: 'Taxi',
+  [PointType.BUS]: 'Bus',
+  [PointType.TRAIN]: 'Train',
+  [PointType.SHIP]: 'Ship',
+  [PointType.DRIVE]: 'Drive',
+  [PointType.FLIGHT]: 'Flight',
+  [PointType.CHECK_IN]: 'Check-in',
+  [PointType.SIGHTSEEING]: 'Sightseeing',
+  [PointType.RESTAURANT]: 'Restaurant'
+};
+
+const ApiServiceResponseMethod = {
+  GET: 'GET',
+  PUT: 'PUT',
+  POST: 'POST',
+  DELETE: 'DELETE'
+};
+
+const TimeLimit = {
+  LOWER_LIMIT: 300,
+  UPPER_LIMIT: 1000
+};
+
+export {SortType, Mode, UserAction, UpdateType, FilterType, SORT_TYPES_DISABLED, SortTypeDescription, PointType, PointTypeDescription, ApiServiceResponseMethod, TimeLimit};
