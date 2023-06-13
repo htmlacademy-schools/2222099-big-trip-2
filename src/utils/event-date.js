@@ -28,6 +28,8 @@ const continuance = (dateFrom, dateTo) => {
 const date = (date) => dayjs(date).format(DATE_FORMAT);
 const time = (date) => dayjs(date).format(TIME_FORMAT);
 const dateTime = (date) => dayjs(date).format(DATE_TIME_FORMAT);
+const dateInPastPoint = (dateTo) => dateTo.isBefore(dayjs());
+const dateInFuturePoint = (dateFrom) => dateFrom.isAfter(dayjs());
+const dateNowPoint = (dateFrom, dateTo) => dateFrom.isBefore(dayjs()) && dateTo.isAfter(dayjs());
 
-
-export { defaultPointDate, continuance, date, time, dateTime };
+export { defaultPointDate, continuance, date, time, dateTime, dateInPastPoint, dateInFuturePoint, dateNowPoint };
