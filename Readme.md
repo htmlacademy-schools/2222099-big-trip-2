@@ -1,6 +1,6 @@
 # Проект «Большое путешествие»
 
-* Студент: [Федор Шардыко](https://up.htmlacademy.ru/univer-js2/2/user/2222099).
+* Студент: [Илья Овечкин](https://up.htmlacademy.ru/univer-js2/2/user/2222111).
 * Наставник: `Глеб Клецков`.
 
 ---
@@ -48,5 +48,5 @@ git clone SSH-адрес_вашего_форка
 
 Репозиторий создан для обучения на профессиональном курсе «[JavaScript. Архитектура клиентских приложений](https://htmlacademy.ru/intensive/ecmascript)» от [HTML Academy](https://htmlacademy.ru).
 
-[check-image]: https://github.com/htmlacademy-ecmascript/2222099-big-trip-2/workflows/Project%20check/badge.svg?branch=master
-[check-url]: https://github.com/htmlacademy-ecmascript/2222099-big-trip-2/actions
+[check-image]: https://github.com/htmlacademy-ecmascript/2222111-big-trip-2/workflows/Project%20check/badge.svg?branch=master
+[check-url]: https://github.com/htmlacademy-ecmascript/2222111-big-trip-2/actions
