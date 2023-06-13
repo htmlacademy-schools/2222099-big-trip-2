@@ -1,7 +1,9 @@
 import { dateTime } from '../utils/event-date.js';
-import AbstractView from '../framework/view/abstract-view.js';
+import { TYPES_POINT } from '../mock/waypoint.js';
+import { firstLetterUp } from '../utils/consts.js';
+import AbstracStatefultView from '../framework/view/abstract-stateful-view.js';
 
-const renderEndPointPicture = (pictures) => {
+const endPictureRender = (pictures) => {
   let result = '';
   pictures.forEach((picture) => {
     result = `${result}<img class="event__photo" src="${picture.src}" alt="${picture.description}">`;
@@ -17,10 +19,10 @@ const offersRender = (allOffers, offerCheck) => {
 
     const checkOff = offerCheck.includes(offer.id) ? 'check' : '';
 
-    result = `${result}<div class="event__available-offers">
+    result = `${result}
     <div class="event__offer-selector">
-      <input class="event__offer-checkbox  visually-hidden" id="event-offer-luggage-1" type="checkbox" name="event-offer-luggage" ${checkOff}>
-      <label class="event__offer-label" for="event-offer-luggage-1">
+      <input class="event__offer-checkbox  visually-hidden" id="event-offer-${offer.id}" type="checkbox" name="event-offer-luggage" ${checkOff}>
+      <label class="event__offer-label" for="event-offer-${offer.id}">
         <span class="event__offer-title">${offer.title}</span>
         &plus;&euro;&nbsp;
         <span class="event__offer-price">${offer.price}</span>
@@ -30,6 +32,33 @@ const offersRender = (allOffers, offerCheck) => {
 
   return result;
 };
+
+const renderEditPointDateTemplate = (dateFrom, dateTo) => (
+  `<div class="event__field-group  event__field-group--time">
+    <label class="visually-hidden" for="event-start-time-1">From</label>
+    <input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time" value="${dateTime(dateFrom)}">
+    &mdash;
+    <label class="visually-hidden" for="event-end-time-1">To</label>
+    <input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time" value="${dateTime(dateTo)}">
+  </div>`
+);
+
+const editPointTemplateRender = (currentType) => TYPES_POINT.map((type) =>
+  `<div class="event__type-item">
+     <input id="event-type-${type}" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${type}" ${currentType === type ? 'checked' : ''}>
+     <label class="event__type-label  event__type-label--${type}" for="event-type-${type}">${firstLetterUp(type)}</label>
+   </div>`).join('');
+
+const renderEndPointsName = (endPoint) => {
+  let result = '';
+  endPoint.forEach((endPoint) => {
+    result = `${result}
+    <option value="${endPoint.name}"></option>`;
+  });
+  
+  return result;
+};
+
 
 const createTemplateEditForm = (point, endPoint, offers) => {
 
@@ -49,63 +78,20 @@ const createTemplateEditForm = (point, endPoint, offers) => {
           <div class="event__type-list">
             <fieldset class="event__type-group">
               <legend class="visually-hidden">Event type</legend>
-              <div class="event__type-item">
-                <input id="event-type-taxi-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="taxi" ${('taxi' === type) ? 'checked' : ''}>
-                <label class="event__type-label  event__type-label--taxi" for="event-type-taxi-1">Taxi</label>
-              </div>
-              <div class="event__type-item">
-                <input id="event-type-bus-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="bus" ${('bus' === type) ? 'checked' : ''}>
-                <label class="event__type-label  event__type-label--bus" for="event-type-bus-1">Bus</label>
-              </div>
-              <div class="event__type-item">
-                <input id="event-type-train-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="train" ${('train' === type) ? 'checked' : ''}>
-                <label class="event__type-label  event__type-label--train" for="event-type-train-1">Train</label>
-              </div>
-              <div class="event__type-item">
-                <input id="event-type-ship-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="ship" ${('ship' === type) ? 'checked' : ''}>
-                <label class="event__type-label  event__type-label--ship" for="event-type-ship-1">Ship</label>
-              </div>
-              <div class="event__type-item">
-                <input id="event-type-drive-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="drive" ${('drive' === type) ? 'checked' : ''}>
-                <label class="event__type-label  event__type-label--drive" for="event-type-drive-1">Drive</label>
-              </div>
-              <div class="event__type-item">
-                <input id="event-type-flight-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="flight" ${('flight' === type) ? 'checked' : ''}>
-                <label class="event__type-label  event__type-label--flight" for="event-type-flight-1">Flight</label>
-              </div>
-              <div class="event__type-item">
-                <input id="event-type-check-in-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="check-in" ${('check-in' === type) ? 'checked' : ''}>
-                <label class="event__type-label  event__type-label--check-in" for="event-type-check-in-1">Check-in</label>
-              </div>
-              <div class="event__type-item">
-                <input id="event-type-sightseeing-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="sightseeing" ${('sightseeing' === type) ? 'checked' : ''}>
-                <label class="event__type-label  event__type-label--sightseeing" for="event-type-sightseeing-1">Sightseeing</label>
-              </div>
-              <div class="event__type-item">
-                <input id="event-type-restaurant-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="restaurant" ${('restaurant' === type) ? 'checked' : ''}>
-                <label class="event__type-label  event__type-label--restaurant" for="event-type-restaurant-1">Restaurant</label>
-              </div>
+              ${editPointTemplateRender(type)}
             </fieldset>
           </div>
         </div>
         <div class="event__field-group  event__field-group--destination">
-          <label class="event__label  event__type-output" for="event-destination-1">
+          <label class="event__label  event__type-output" for="event-${destinationId}">
           ${type}
           </label>
-          <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${endPoint[destinationId].name}" list="destination-list-1">
+          <input class="event__input  event__input--destination" id="event-${destinationId}" type="text" name="event-destination" value="${endPoint[destinationId].name}" list="destination-list-1">
           <datalist id="destination-list-1">
-            <option value="Amsterdam"></option>
-            <option value="Geneva"></option>
-            <option value="Chamonix"></option>
+            ${renderEndPointsName(endPoint)}
           </datalist>
         </div>
-        <div class="event__field-group  event__field-group--time">
-                   <label class="visually-hidden" for="event-start-time-1">From</label>
-                   <input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time" value="${dateTime(dateFrom)}">
-                   &mdash;
-                   <label class="visually-hidden" for="event-end-time-1">To</label>
-                   <input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time" value="${dateTime(dateTo)}">
-                 </div>
+        ${editPointTemplateRender(dateFrom, dateTo)}
         <div class="event__field-group  event__field-group--price">
           <label class="event__label" for="event-price-1">
             <span class="visually-hidden">Price</span>
@@ -122,14 +108,16 @@ const createTemplateEditForm = (point, endPoint, offers) => {
       <section class="event__details">
         <section class="event__section  event__section--offers">
           <h3 class="event__section-title  event__section-title--offers">Offers</h3>
+          <div>
           ${offersRender(allPointOffersType.offers, offerIds)}
+          </div>
         </section>
         <section class="event__section  event__section--destination">
           <h3 class="event__section-title  event__section-title--destination">Destination</h3>
             <p class="event__destination-description">${endPoint[destinationId].description}</p>
             <div class="event__photos-container">
                         <div class="event__photos-tape">
-                        ${renderEndPointPicture(endPoint[destinationId].pictures)}
+                        ${endPictureRender(endPoint[destinationId].pictures)}
                       </div>
                     </div>
         </section>
@@ -139,22 +127,22 @@ const createTemplateEditForm = (point, endPoint, offers) => {
 };
 
 
-export default class ViewEditForm extends AbstractView {
+export default class ViewEditForm extends AbstracStatefultView {
   
   #firstPoint = null;
   #endPoint = null;
-  #dlc = null;
+  #offers = null;
 
 
-  constructor(firstPoint, endPoint, dlc) {
+  constructor(firstPoint, endPoint, offers) {
     super();
     this.#firstPoint = firstPoint;
     this.#endPoint = endPoint;
-    this.#dlc = dlc;
+    this.#offers = offers;
   }
 
   get template() {
-    return createTemplateEditForm(this.#firstPoint, this.#endPoint, this.#dlc);
+    return createTemplateEditForm(this.#firstPoint, this.#endPoint, this.#offers);
   }
 
   setPointClickHandler = (callback) => {
@@ -164,7 +152,7 @@ export default class ViewEditForm extends AbstractView {
 
   setSubmitHandler = (callback) => {
     this._callback.submit = callback;
-    this.element.querySelector('form').addEventListener('submit', this.#submitHandler);
+    this.element.querySelector('.event__save-btn').addEventListener('click', this.#submitHandler);
   };
 
   #pointClickHandler = (evt) => {

@@ -3,7 +3,7 @@ import { getRandomInteger, getRandomElement } from '../utils/random.js';
 import { nanoid } from 'nanoid';
 
 const COUNT = 120;
-const TYPES = ['taxi', 'bus', 'train', 'ship', 'drive', 'flight', 'check-in', 'sightseeing', 'restaurant'];
+const TYPES_POINT = ['taxi', 'bus', 'train', 'ship', 'drive', 'flight', 'check-in', 'sightseeing', 'restaurant'];
 const ENDPOINTS = ['Amsterdam', 'Chamonix', 'Geneva', 'Vena', 'Berlin', 'Praga', 'Belgrad', 'Cair', 'Riga',];
 
 const DESCRIPTION = ['Nunc fermentum tortor ac porta dapibus.',
@@ -62,7 +62,7 @@ const TypesOfferGenerate = (pointType) => ({
   offers: Array.from({length: getRandomInteger(CountEelements.MIN, CountEelements.MAX)}).map((value, index) => offerGenerate(index + 1, pointType)),
 });
 
-const typeOffersGet = () => Array.from({length: TYPES.length}).map((value, index) => TypesOfferGenerate(TYPES[index]));
+const typeOffersGet = () => Array.from({length: TYPES_POINT.length}).map((value, index) => TypesOfferGenerate(TYPES_POINT[index]));
 
 const offersByType = typeOffersGet();
 
@@ -85,4 +85,4 @@ const generatePoint = () => {
 
 const getAllPoints = () => Array.from({length: COUNT}).map(() => generatePoint()).sort();
 
-export { getAllPoints, getEndPoints, typeOffersGet };
+export { getAllPoints, getEndPoints, typeOffersGet, TYPES_POINT };
